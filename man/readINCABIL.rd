@@ -37,7 +37,7 @@ If remove = TRUE (the standard), the (uncompressed) files are deleted after they
 If CoSys is provided (e.g. from a \link{proj4string} command), the retured raster is projected using this reference system. Otherwise no coordinate system is used.
 }
 \value{
-Returns a raster.
+A named (date and time) list with rasters
 }
 
 \author{
@@ -63,12 +63,13 @@ file <- paste(path.package("ZAMGR"),"/extdata/INCA_TT.tar.gz",sep="")
 x <- readINCABIL(file)
 
 # plot the results
-plot(x)
+plot(x[[1]])
 
 # compress first and then read
 file <- untar(file, exdir = tempdir())
-file <- dir(tempdir, pattern = ".bil", full.names = TRUE)
-x <- readINCABIL(file = gsub(".bil", replacement = "", file), all = TRUE)
+file <- dir(path = tempdir(), pattern = ".bil", full.names = TRUE)
+x <- readINCABIL(file = gsub(".bil", replacement = "", file), times = "all")
+
 }
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
