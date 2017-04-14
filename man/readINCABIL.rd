@@ -9,7 +9,7 @@ Read an INCA file in the BIL format from a .tar.gz archive.
 }
 \usage{
 readINCABIL(filename, times = c("first","last","all","date"),
-            date = NULL, remove = TRUE, CoSys = NULL)
+            date = NULL, remove = TRUE, CoSys = NULL, tz = "utc")
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -27,6 +27,9 @@ readINCABIL(filename, times = c("first","last","all","date"),
 }
 \item{CoSys}{
  A character string giving the coordiante system of the raster or NULL
+}
+\item{tz}{
+ A character string giving the time zone
 }
 }
 \details{
