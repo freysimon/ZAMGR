@@ -52,6 +52,19 @@ readINCABIL <- function(filename,times="first",date=NULL,remove=TRUE,CoSys = NUL
   tim <- paste(filename, ".tim", sep="")
   bil <- paste(filename, ".bil", sep="")
 
+  warn <- FALSE
+
+  if(any(!file.exists(c(hdr,tim,bil)))){
+    warn = TRUE
+  } else  if(any(file.size(c(hdr, tim, bil)) == 0)){
+    warn = TRUE
+  }
+
+  if(warn){
+    warning("Warning! Apparently one of the files does not exist or has size 0")
+    return(NULL)
+  }
+
   # Lese HDR File um Dimensionen zu berechnen
   hdr <- read.table(hdr,header = FALSE,stringsAsFactors = FALSE)
   nRows <- as.numeric(hdr[hdr[,1]=="nRows",2])
