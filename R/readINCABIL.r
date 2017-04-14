@@ -1,6 +1,6 @@
 
 
-readINCABIL <- function(filename,times="first",date=NULL,remove=TRUE,CoSys = NULL){
+readINCABIL <- function(filename,times="first",date=NULL,remove=TRUE,CoSys = NULL, tz = "utc"){
 
   #####################################################################
   #                                                                   #
@@ -74,7 +74,7 @@ readINCABIL <- function(filename,times="first",date=NULL,remove=TRUE,CoSys = NUL
 
     # Lese TIM file um die gespeicherten Zeitpunkte zu identifizieren
     tim <- read.table(tim, header=FALSE,colClasses=c("character","numeric"))
-    timesteps <- as.POSIXct(tim[,1],format="%Y%m%d%H%M")
+    timesteps <- as.POSIXct(tim[,1],format="%Y%m%d%H%M", tz = tz)
 
     # Lese bil file als bitsream
     bil <- readBin(bil,what="integer",size=2,
