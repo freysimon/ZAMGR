@@ -1,4 +1,41 @@
 
+#' Read a binary INCA file
+#' @description Read an INCA file in the BIL format from a .tar.gz archive.
+#' @details Both uncompressed and compressed (.tar.gz) files can be processed. If uncompressed, only the filename without extention must be provided.
+#'
+#'    If times is "date", a POSIXct date object must be provided to selsect the date within the tim file.
+#'    If times is "all", all timestamps within the file are read and a stack of rasters is retured.
+#'
+#'    If remove = TRUE (the standard), the (uncompressed) files are deleted after they are processed. Does not affect compressed files!
+#'
+#'    If CoSys is provided (e.g. from a \link{proj4string} command), the retured raster is projected using this reference system. Otherwise no coordinate system is used.
+#' @author Simon Frey
+#' @param filename A character string to the file to be read in
+#' @param times  A character string giving the elemnt of the BIL file to be read in. One of 'first', 'last', 'all', 'date'. See details.
+#' @param date A POSIXct date or NULL. Only evaluated if times == date
+#' @param remove Logical. Remove the processed files?
+#' @param CoSys A character string giving the coordiante system of the raster or NULL.
+#' @param tz A character string giving the time zone
+#' @return A named (date and time) list with rasters
+#' @export
+#' @examples
+#'    # file to load
+#'    file <- paste(path.package("ZAMGR"),"/extdata/INCA_TT.tar.gz",sep="")
+#'
+#'    # reading a compressed file
+#'    x <- readINCABIL(file)
+#'
+#'    # plot the results
+#'    plot(x[[1]])
+#'
+#'    # compress first and then read
+#'    file <- untar(file, exdir = tempdir())
+#'    file <- dir(path = tempdir(), pattern = ".bil", full.names = TRUE)
+#'    x <- readINCABIL(file = gsub(".bil", replacement = "", file), times = "all")
+#' @seealso \link{raster}
+#'    \link{readBin}
+#'    \link{proj4string}
+#'    \link{crs}
 
 readINCABIL <- function(filename,times="first",date=NULL,remove=TRUE,CoSys = NULL, tz = "utc"){
 
@@ -22,6 +59,8 @@ readINCABIL <- function(filename,times="first",date=NULL,remove=TRUE,CoSys = NUL
   # Version 0.4 (September 2016 - Jänner 2017)                        #
   #                                                                   #
   #####################################################################
+
+  library(TigR)
 
 
   # Überprüfen, ob für times ein sinnvolles Schlagwort angegeben wurde
