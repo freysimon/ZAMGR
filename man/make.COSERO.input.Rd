@@ -4,10 +4,10 @@
 \alias{make.COSERO.input}
 \title{Create a T_IZ or P_IZ file from a set of INCA-Files}
 \usage{
-make.COSERO.input(INCAFiles, shape, nzraster, output = NULL, ...)
+make.COSERO.input(f, shape, nzraster, output = NULL, ...)
 }
 \arguments{
-\item{INCAFiles}{A character vector of INCA files}
+\item{f}{A character vector of INCA files}
 
 \item{shape}{Absolute path to a shapefile (points) at which locations the values of the INCA files are extracted}
 

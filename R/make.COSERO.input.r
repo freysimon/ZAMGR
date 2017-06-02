@@ -1,5 +1,5 @@
 #' Create a T_IZ or P_IZ file from a set of INCA-Files
-#' @param INCAFiles A character vector of INCA files
+#' @param f A character vector of INCA files
 #' @param shape Absolute path to a shapefile (points) at which locations the values of the INCA files are extracted
 #' @param nzraster Path to a raster with the nz information
 #' @param output name of the outputfile or NULL
@@ -8,7 +8,7 @@
 #' @author Simon Frey
 #' @export
 #' @seealso \link{readINCABIL}
-make.COSERO.input <- function(INCAFiles, shape, nzraster, output = NULL, ...){
+make.COSERO.input <- function(f, shape, nzraster, output = NULL, ...){
   library(rgdal)
   library(raster)
   library(TigR)
@@ -40,6 +40,9 @@ make.COSERO.input <- function(INCAFiles, shape, nzraster, output = NULL, ...){
   for(k in 1:length(INCAFiles)){
     setWinProgressBar(wp, label = INCAFiles[k], value=k)
     file <- readINCABIL(INCAFiles[k], CoSys = p4j, ...)
+    if(is.null(file)){
+      next
+    }
     date <- last(unlist(strsplit(names(file), ".", fixed = TRUE)))
     ext <- extract(file[[1]], shape)
     IZMAT[k,1] <- date
