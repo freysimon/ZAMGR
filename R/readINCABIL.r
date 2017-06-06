@@ -78,6 +78,7 @@ readINCABIL <- function(filename,times="first",date=NULL,remove=TRUE,CoSys = NUL
   if(substrRight(filename,7) == ".tar.gz"){
     # make sure to purge tempdir first
     file.remove(dir(path = tempdir(), full.names = TRUE, pattern = "bil"))
+    untar(filename, exdir = tempdir())
     filename <- dir(path = tempdir(), pattern = "bil", full.names = TRUE)
     filename <- gsub(".bil", replacement = "", filename)
 

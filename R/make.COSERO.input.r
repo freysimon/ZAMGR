@@ -30,16 +30,16 @@ make.COSERO.input <- function(f, shape, nzraster, output = NULL, ...){
   # extract nz values to get right information about the spatial location
   nzext <- extract(nzras, shape)
 
-  # make matrix with ncol = nzext + 1 for the date and nrow = length(INCAFiles)
-  IZMAT <- as.data.frame(matrix(ncol = length(nzext)+1, nrow = length(INCAFiles), data = NA))
+  # make matrix with ncol = nzext + 1 for the date and nrow = length(f)
+  IZMAT <- as.data.frame(matrix(ncol = length(nzext)+1, nrow = length(f), data = NA))
   colnames(IZMAT) <- c("Date", nzext)
 
-  wp <- winProgressBar("Processing INCA Files", min = 0, label = "starting...", max = length(INCAFiles))
+  wp <- winProgressBar("Processing INCA Files", min = 0, label = "starting...", max = length(f))
 
-  # process INCAFiles
-  for(k in 1:length(INCAFiles)){
-    setWinProgressBar(wp, label = INCAFiles[k], value=k)
-    file <- readINCABIL(INCAFiles[k], CoSys = p4j, ...)
+  # process f
+  for(k in 1:length(f)){
+    setWinProgressBar(wp, label = f[k], value=k)
+    file <- readINCABIL(f[k], CoSys = p4j, ...)
     if(is.null(file)){
       next
     }
