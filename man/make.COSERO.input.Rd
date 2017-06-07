@@ -4,7 +4,7 @@
 \alias{make.COSERO.input}
 \title{Create a T_IZ or P_IZ file from a set of INCA-Files}
 \usage{
-make.COSERO.input(f, shape, nzraster, output = NULL, ...)
+make.COSERO.input(f, shape, nzraster, output = NULL, otf = FALSE, ...)
 }
 \arguments{
 \item{f}{A character vector of INCA files}
@@ -14,6 +14,8 @@ make.COSERO.input(f, shape, nzraster, output = NULL, ...)
 \item{nzraster}{Path to a raster with the nz information}
 
 \item{output}{name of the outputfile or NULL}
+
+\item{otf}{write on-the-fly (don't hold the whole matrix in memory)}
 
 \item{...}{parameters passed to readINCABIL}
 }

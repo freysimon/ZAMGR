@@ -3,12 +3,13 @@
 #' @param shape Absolute path to a shapefile (points) at which locations the values of the INCA files are extracted
 #' @param nzraster Path to a raster with the nz information
 #' @param output name of the outputfile or NULL
+#' @param otf write on-the-fly (don't hold the whole matrix in memory)
 #' @param ... parameters passed to readINCABIL
 #' @return if output == NULL the IZ-matrix is returned. Else the IZ-File is written and nothing is returned to R.
 #' @author Simon Frey
 #' @export
 #' @seealso \link{readINCABIL}
-make.COSERO.input <- function(f, shape, nzraster, output = NULL, ...){
+make.COSERO.input <- function(f, shape, nzraster, output = NULL, otf = FALSE, ...){
   library(rgdal)
   library(raster)
   library(TigR)
@@ -31,8 +32,19 @@ make.COSERO.input <- function(f, shape, nzraster, output = NULL, ...){
   nzext <- extract(nzras, shape)
 
   # make matrix with ncol = nzext + 1 for the date and nrow = length(f)
-  IZMAT <- as.data.frame(matrix(ncol = length(nzext)+1, nrow = length(f), data = NA))
-  colnames(IZMAT) <- c("Date", nzext)
+  if(!otf){
+     IZMAT <- as.data.frame(matrix(ncol = length(nzext)+1, nrow = length(f), data = NA))
+     colnames(IZMAT) <- c("Date", nzext)
+  } else {
+    if(is.null(output)){
+      stop("Output must not be NULL if otf is TRUE")
+    } else {
+      wt <- c("Date", nzext)
+      write.table(t(wt), file = output, col.names = FALSE, row.names = FALSE,
+                  sep="\t", quote = FALSE)
+    }
+  }
+
 
   wp <- winProgressBar("Processing INCA Files", min = 0, label = "starting...", max = length(f))
 
@@ -45,15 +57,22 @@ make.COSERO.input <- function(f, shape, nzraster, output = NULL, ...){
     }
     date <- last(unlist(strsplit(names(file), ".", fixed = TRUE)))
     ext <- extract(file[[1]], shape)
-    IZMAT[k,1] <- date
-    IZMAT[k,2:ncol(IZMAT)] <- ext
+    if(otf){
+      ext <- c(date, ext)
+      write.table(t(ext), file = output, append = TRUE, quote = FALSE,
+                  col.names = FALSE, row.names = FALSE, sep = "\t")
+    } else {
+      IZMAT[k,1] <- date
+      IZMAT[k,2:ncol(IZMAT)] <- ext
+    }
+
   }
 
   close(wp)
 
   if(is.null(output)){
     return(IZMAT)
-  } else {
+  } else if(!otf){
     write.table(IZMAT, file = output, col.names=TRUE, row.names=FALSE, sep="\t", quote = FALSE)
   }
 }
