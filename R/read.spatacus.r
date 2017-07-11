@@ -1,4 +1,4 @@
-
+#' @title read.spartacus
 #' @description Read information from ZAMG's spatacus dataset
 #' @author Simon Frey
 #' @param x either a single rda file or a vector of rda files containing spartacus data
