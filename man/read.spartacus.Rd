@@ -2,20 +2,19 @@
 % Please edit documentation in R/read.spatacus.r
 \name{read.spartacus}
 \alias{read.spartacus}
-\title{read.spartacus}
+\title{Read information from ZAMG's spatacus dataset}
 \usage{
-read.spartacus(x, crs = "default")
+read.spartacus(x, crs = "default", show.progress = TRUE)
 }
 \arguments{
 \item{x}{either a single rda file or a vector of rda files containing spartacus data}
 
 \item{crs}{a crs chracter string providing the spatial reference information of the spartacus file}
+
+\item{show.progress}{logical. should a progressbar be shown?}
 }
 \value{
 a raster brick
-}
-\description{
-Read information from ZAMG's spatacus dataset
 }
 \author{
 Simon Frey

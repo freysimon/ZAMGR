@@ -1,12 +1,12 @@
-#' @title read.spartacus
-#' @description Read information from ZAMG's spatacus dataset
+#' @title Read information from ZAMG's spatacus dataset
 #' @author Simon Frey
 #' @param x either a single rda file or a vector of rda files containing spartacus data
 #' @param crs a crs chracter string providing the spatial reference information of the spartacus file
+#' @param show.progress logical. should a progressbar be shown?
 #' @return a raster brick
 #' @export
 
-read.spartacus <- function(x, crs = "default"){
+read.spartacus <- function(x, crs = "default", show.progress = TRUE){
 
   library(raster)
   library(xts)
@@ -18,12 +18,20 @@ read.spartacus <- function(x, crs = "default"){
   }
 
   # get month and year from x
-  datevector	<-	unlist(lapply(x,FUN=function(x) strsplit(strsplit(x,".",fixed=TRUE)[[1]][1],"Tm",fixed=TRUE)[[1]][2]))
-  datevector	<-	unlist(lapply(datevector,FUN=function(x) paste(substring(x,5),strtrim(x,4),sep="/")))
+  datevector <-	unlist(lapply(x,FUN=function(x) strsplit(strsplit(x,".",fixed=TRUE)[[1]][1],"Tm",fixed=TRUE)[[1]][2]))
+  datevector <- as.character(as.yearmon(datevector, format = "%Y%m", tz = "utc"))
 
   out <- list()
 
+  if(show.progress){
+    pb <- txtProgressBar(min = 0, max = length(x), style = 3)
+  }
+
   for(k in 1:length(x)){
+
+    if(show.progress){
+      setTxtProgressBar(pb, k)
+    }
     load(x[k]) # loaded variable is Tm
 
     X <- attr(Tm, "X")
@@ -38,8 +46,6 @@ read.spartacus <- function(x, crs = "default"){
 
   out <- brick(out)
 
-  if(is.null(extractpoints)){
-    return(out)
-  }
+  return(out)
 
 }
