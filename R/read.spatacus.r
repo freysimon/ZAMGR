@@ -5,6 +5,8 @@
 #' @param show.progress logical. should a progressbar be shown?
 #' @return a raster brick
 #' @export
+#' @import xts
+#' @import raster
 
 read.spartacus <- function(x, crs = "default", show.progress = TRUE){
 

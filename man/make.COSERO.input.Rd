@@ -25,6 +25,12 @@ if output == NULL the IZ-matrix is returned. Else the IZ-File is written and not
 \description{
 Create a T_IZ or P_IZ file from a set of INCA-Files
 }
+\details{
+Reads a set of INCA files (Precipitation or Temperature) and calculates a matrix that can be read by COSERO.
+
+    The shapefile must be projected in the same coordinate systm as the nzraster as well as the INCA files.
+    Normally this is "+proj=lcc +lat_1=46 +lat_2=49 +lat_0=47.5 +lon_0=13.33333333333333 +x_0=400000 +y_0=400000 +ellps=bessel +units=m +no_defs"
+}
 \seealso{
 \link{readINCABIL}
 }

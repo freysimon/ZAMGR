@@ -18,6 +18,8 @@
 #' @param tz A character string giving the time zone
 #' @return A named (date and time) list with rasters
 #' @export
+#' @import TigR
+#' @import raster
 #' @examples
 #'    # file to load
 #'    file <- paste(path.package("ZAMGR"),"/extdata/INCA_TT.tar.gz",sep="")
