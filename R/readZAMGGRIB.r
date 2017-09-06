@@ -8,23 +8,33 @@
 #' @param ex Either an \code{\link{extent}} object, NULL, alaro, or arome. As of now, arome is not supported, yet.
 #' @param crs Either a \code{\link{crs}} string, NULL, alaro, or arome. As of now, arome is not supported, yet.
 #' @param wgrib Absolute path to the executable of wgrib. If NULL, wgrib must be installed properly on the system.
-#' @param level numeric giving the record number of variable within GRIB file
+#' @param recnr numeric giving the record number of the respective variable within GRIB file
+#' @param variable character string giving the abbreviated variable within the GRIB file.
 #' @return A (projected) raster with the extracted information
 #' @details If ex and/or crs are supplied, the returned raster will be projected. If ex and/or crs are specified as
 #' "alaro" or "arome", the respective extent and crs are used. Note, that as of now, only alaro is supported.
 #'
-#'     This function relies on the package \code{\link{TigR}}
+#'     Either recnr or variable must be specified to extract the information of interest.
+#'     If both are given the latter is ignored.
+#'
+#'     This function relies on the package TigR, which can be found on https://github.com/freysimon/TigR
 
 
-readZAMGGRIB <- function(gribfile, ex = NULL, crs = NULL, wgrib = NULL, level){
+readZAMGGRIB <- function(gribfile, ex = NULL, crs = NULL, wgrib = NULL, recnr = NULL, variable = NULL){
 
+  if(all(is.null(recnr), is.null(variable))){
+    stop("Either recnr or variable must be specified")
+  }
+  if(!any(is.null(recnr), is.null(variable))){
+    variable <- NULL
+  }
   if(is.null(wgrib)){
     wgrib <- "wgrib"
   } else if(!is.character(wgrib)){
     stop("wgrib must be the path to wgrib.exe You may download it from: http://www.cpc.ncep.noaa.gov/products/wesley/wgrib.html")
   }
 
-  if(!is.numeric(level)){
+  if(!is.numeric(recnr)){
     stop("level must be an integer giving the record number of variable within GRIB file")
   }
 
@@ -51,8 +61,22 @@ readZAMGGRIB <- function(gribfile, ex = NULL, crs = NULL, wgrib = NULL, level){
   # executing wgrib to extract the date to a tempdir
   tmp <- tempfile(fileext = ".txt")
 
-  wstring <- paste(changeSlash(wgrib), changeSlash(gribfile) ,"-d", level, "-text -o", tmp, sep = " ")
-  system(wstring)
+  if(!is.null(variable)){
+    get.recnr <- paste(changeSlash(wgrib), changeSlash(gribfile), sep = " ")
+    temp <- system(get.recnr, intern = TRUE)
+
+    # query if variable is part of the grib file, if not return NULL
+    if(length(grep(variable, temp)) == 0){
+      warning(paste(variable, " not found in gribfile ", basename(gribfile), ". Returning NULL.", sep = ""))
+      return(NULL)
+    }
+    recnr <- as.numeric(strsplit(temp[grep(variable, temp)], ":", fixed = TRUE)[[1]][1])
+  }
+
+
+
+  wstring <- paste(changeSlash(wgrib), changeSlash(gribfile) ,"-d", recnr, "-text -o", tmp, sep = " ")
+  system(wstring, show.output.on.console = FALSE)
 
   # reading tempfile
   dims <- read.table(tmp, header = FALSE, nrow = 1)

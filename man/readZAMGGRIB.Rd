@@ -4,7 +4,8 @@
 \alias{readZAMGGRIB}
 \title{Read a GRIB-1 file using wgrib}
 \usage{
-readZAMGGRIB(gribfile, ex = NULL, crs = NULL, wgrib = NULL, level)
+readZAMGGRIB(gribfile, ex = NULL, crs = NULL, wgrib = NULL,
+  recnr = NULL, variable = NULL)
 }
 \arguments{
 \item{gribfile}{Absolute path to a gribfile}
@@ -15,7 +16,9 @@ readZAMGGRIB(gribfile, ex = NULL, crs = NULL, wgrib = NULL, level)
 
 \item{wgrib}{Absolute path to the executable of wgrib. If NULL, wgrib must be installed properly on the system.}
 
-\item{level}{numeric giving the record number of variable within GRIB file}
+\item{recnr}{numeric giving the record number of the respective variable within GRIB file}
+
+\item{variable}{character string giving the abbreviated variable within the GRIB file.}
 }
 \value{
 A (projected) raster with the extracted information
@@ -27,7 +30,10 @@ Read a GRIB-1 file provided by the ZAMG using wgrib and extract a specific raste
 If ex and/or crs are supplied, the returned raster will be projected. If ex and/or crs are specified as
 "alaro" or "arome", the respective extent and crs are used. Note, that as of now, only alaro is supported.
 
-    This function relies on the package \code{\link{TigR}}
+    Either recnr or variable must be specified to extract the information of interest.
+    If both are given the latter is ignored.
+
+    This function relies on the package TigR, which can be found on https://github.com/freysimon/TigR
 }
 \author{
 Simon Frey
