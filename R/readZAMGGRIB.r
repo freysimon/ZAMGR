@@ -5,22 +5,27 @@
 #' @import TigR
 #' @export
 #' @param gribfile Absolute path to a gribfile
-#' @param ex Either an \code{\link{extent}} object, NULL, alaro, or arome. As of now, arome is not supported, yet.
-#' @param crs Either a \code{\link{crs}} string, NULL, alaro, or arome. As of now, arome is not supported, yet.
+#' @param ex Either an \code{\link{extent}} object, NULL, 'alaro', or 'arome'. As of now, 'arome' is not supported, yet.
+#' @param crs Either a \code{\link{crs}} string, NULL, 'alaro', or 'arome'. As of now, 'arome' is not supported, yet.
 #' @param wgrib Absolute path to the executable of wgrib. If NULL, wgrib must be installed properly on the system.
 #' @param recnr numeric giving the record number of the respective variable within GRIB file
 #' @param variable character string giving the abbreviated variable within the GRIB file.
+#' @param remove either TRUE/FALSE for removing / not removing the gribfile after reading
+#'  or ''success'/fail' for only removing files that have / haven't been successfully read.
 #' @return A (projected) raster with the extracted information
+#' @seealso For reading INCA files, see \code{\link{readINCABIL}}
 #' @details If ex and/or crs are supplied, the returned raster will be projected. If ex and/or crs are specified as
 #' "alaro" or "arome", the respective extent and crs are used. Note, that as of now, only alaro is supported.
 #'
 #'     Either recnr or variable must be specified to extract the information of interest.
 #'     If both are given the latter is ignored.
 #'
-#'     This function relies on the package TigR, which can be found on https://github.com/freysimon/TigR
+#'     This function relies on the package TigR, which is available on \href{https://github.com/freysimon/TigR}{Github}
+#'
+#'     Note that wgrib must be installed on the machine. It can be downloaded from \url{http://www.cpc.ncep.noaa.gov/products/wesley/wgrib.html}
 
 
-readZAMGGRIB <- function(gribfile, ex = NULL, crs = NULL, wgrib = NULL, recnr = NULL, variable = NULL){
+readZAMGGRIB <- function(gribfile, ex = NULL, crs = NULL, wgrib = NULL, recnr = NULL, variable = NULL, remove = FALSE){
 
   if(all(is.null(recnr), is.null(variable))){
     stop("Either recnr or variable must be specified")
@@ -68,12 +73,13 @@ readZAMGGRIB <- function(gribfile, ex = NULL, crs = NULL, wgrib = NULL, recnr = 
     # query if variable is part of the grib file, if not return NULL
     if(length(grep(variable, temp)) == 0){
       warning(paste(variable, " not found in gribfile ", basename(gribfile), ". Returning NULL.", sep = ""))
+      if(remove == "fail" | remove == TRUE){
+        file.remove(gribfile)
+      }
       return(NULL)
     }
     recnr <- as.numeric(strsplit(temp[grep(variable, temp)], ":", fixed = TRUE)[[1]][1])
   }
-
-
 
   wstring <- paste(changeSlash(wgrib), changeSlash(gribfile) ,"-d", recnr, "-text -o", tmp, sep = " ")
   system(wstring, show.output.on.console = FALSE)
@@ -106,7 +112,9 @@ readZAMGGRIB <- function(gribfile, ex = NULL, crs = NULL, wgrib = NULL, recnr = 
     crs(ras) <- crs
   }
 
-
+  if(remove == "success" | remove == TRUE){
+    file.remove(gribfile)
+  }
 
   return(ras)
 

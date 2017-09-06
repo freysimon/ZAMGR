@@ -5,20 +5,23 @@
 \title{Read a GRIB-1 file using wgrib}
 \usage{
 readZAMGGRIB(gribfile, ex = NULL, crs = NULL, wgrib = NULL,
-  recnr = NULL, variable = NULL)
+  recnr = NULL, variable = NULL, remove = FALSE)
 }
 \arguments{
 \item{gribfile}{Absolute path to a gribfile}
 
-\item{ex}{Either an \code{\link{extent}} object, NULL, alaro, or arome. As of now, arome is not supported, yet.}
+\item{ex}{Either an \code{\link{extent}} object, NULL, 'alaro', or 'arome'. As of now, 'arome' is not supported, yet.}
 
-\item{crs}{Either a \code{\link{crs}} string, NULL, alaro, or arome. As of now, arome is not supported, yet.}
+\item{crs}{Either a \code{\link{crs}} string, NULL, 'alaro', or 'arome'. As of now, 'arome' is not supported, yet.}
 
 \item{wgrib}{Absolute path to the executable of wgrib. If NULL, wgrib must be installed properly on the system.}
 
 \item{recnr}{numeric giving the record number of the respective variable within GRIB file}
 
 \item{variable}{character string giving the abbreviated variable within the GRIB file.}
+
+\item{remove}{either TRUE/FALSE for removing / not removing the gribfile after reading
+or ''success'/fail' for only removing files that have / haven't been successfully read.}
 }
 \value{
 A (projected) raster with the extracted information
@@ -33,7 +36,12 @@ If ex and/or crs are supplied, the returned raster will be projected. If ex and/
     Either recnr or variable must be specified to extract the information of interest.
     If both are given the latter is ignored.
 
-    This function relies on the package TigR, which can be found on https://github.com/freysimon/TigR
+    This function relies on the package TigR, which is available on \href{https://github.com/freysimon/TigR}{Github}
+
+    Note that wgrib must be installed on the machine. It can be downloaded from \url{http://www.cpc.ncep.noaa.gov/products/wesley/wgrib.html}
+}
+\seealso{
+For reading INCA files, see \code{\link{readINCABIL}}
 }
 \author{
 Simon Frey
