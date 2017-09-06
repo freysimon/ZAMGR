@@ -39,8 +39,8 @@ readZAMGGRIB <- function(gribfile, ex = NULL, crs = NULL, wgrib = NULL, recnr = 
     stop("wgrib must be the path to wgrib.exe You may download it from: http://www.cpc.ncep.noaa.gov/products/wesley/wgrib.html")
   }
 
-  if(!is.numeric(recnr)){
-    stop("level must be an integer giving the record number of variable within GRIB file")
+  if(!is.numeric(recnr) & is.null(variable)){
+    stop("recnr must be an integer giving the record number of variable within GRIB file")
   }
 
   if(dirname(gribfile) == "."){
