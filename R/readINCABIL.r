@@ -82,7 +82,7 @@ readINCABIL <- function(filename,times="first",date=NULL,remove=TRUE,CoSys = NUL
     file.remove(dir(path = tempdir(), full.names = TRUE, pattern = "bil"))
 
     result <- tryCatch({
-      expr = untar(filename, exdir = tempdir())
+      expr = untar(filename, exdir = tempdir(), tar = "internal")
       },
       warning = function(war) {
         print("warning was generated")
