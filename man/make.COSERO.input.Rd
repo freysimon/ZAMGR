@@ -4,7 +4,8 @@
 \alias{make.COSERO.input}
 \title{Create a T_IZ or P_IZ file from a set of INCA-Files}
 \usage{
-make.COSERO.input(f, shape, nzraster, output = NULL, otf = FALSE, ...)
+make.COSERO.input(f, shape, nzraster, output = NULL, otf = FALSE,
+  sortbynz = TRUE, ...)
 }
 \arguments{
 \item{f}{A character vector of INCA files}

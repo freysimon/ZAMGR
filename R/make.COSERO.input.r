@@ -18,7 +18,7 @@
 #'     The shapefile must be projected in the same coordinate systm as the nzraster as well as the INCA files.
 #'     Normally this is "+proj=lcc +lat_1=46 +lat_2=49 +lat_0=47.5 +lon_0=13.33333333333333 +x_0=400000 +y_0=400000 +ellps=bessel +units=m +no_defs"
 #'
-make.COSERO.input <- function(f, shape, nzraster, output = NULL, otf = FALSE, ...){
+make.COSERO.input <- function(f, shape, nzraster, output = NULL, otf = FALSE, sortbynz = TRUE, ...){
   library(rgdal)
   library(raster)
   library(TigR)
@@ -78,6 +78,36 @@ make.COSERO.input <- function(f, shape, nzraster, output = NULL, otf = FALSE, ..
   }
 
   close(wp)
+
+  if(sortbynz){
+
+    wp <- winProgressBar("Sorting the file", min = 0, max = length(nzext), label = "")
+
+    if(otf){
+      IZMAT <- read.table(file = output, header = FALSE, skip = 1, sep = "\t",
+                          colClasses = c("character", rep("numeric", length(nzext))))
+      colnames(IZMAT) <- c("Date", nzext)
+    }
+    # sort by NZ
+    nz <- c(min(nzext):max(nzext))
+    IZSORT <- IZMAT[,2:ncol(IZMAT)]
+    for(k in 1:ncol(IZSORT)){
+      setWinProgressBar(wp, label = paste(round(k/ncol(IZSORT),2), "%", sep = " "), value = k)
+      w <- which(colnames(IZMAT) == nz[k])
+      IZSORT[,k] <- IZMAT[,w]
+    }
+    IZMAT <- cbind(IZMAT[,1], IZSORT)
+    colnames(IZMAT) <- c("Date",nz)
+
+    rm(IZSORT)
+
+    if(otf){
+      write.table(IZMAT, file = output, col.names=TRUE, row.names=FALSE, sep="\t", quote = FALSE)
+    }
+
+    close(Wp)
+
+  }
 
   if(is.null(output)){
     return(IZMAT)
