@@ -3,7 +3,8 @@
 #' @param shape Absolute path to a shapefile (points) at which locations the values of the INCA files are extracted
 #' @param nzraster Path to a raster with the nz information
 #' @param output name of the outputfile or NULL
-#' @param otf write on-the-fly (don't hold the whole matrix in memory)
+#' @param otf logical. write on-the-fly (don't hold the whole matrix in memory)
+#' @param sortbynz logical. Should the output be sorted according to the nz information?
 #' @param ... parameters passed to readINCABIL
 #' @return if output == NULL the IZ-matrix is returned. Else the IZ-File is written and nothing is returned to R.
 #' @author Simon Frey

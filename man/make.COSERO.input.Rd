@@ -16,7 +16,9 @@ make.COSERO.input(f, shape, nzraster, output = NULL, otf = FALSE,
 
 \item{output}{name of the outputfile or NULL}
 
-\item{otf}{write on-the-fly (don't hold the whole matrix in memory)}
+\item{otf}{logical. write on-the-fly (don't hold the whole matrix in memory)}
+
+\item{sortbynz}{logical. Should the output be sorted according to the nz information?}
 
 \item{...}{parameters passed to readINCABIL}
 }
