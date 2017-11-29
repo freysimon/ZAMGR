@@ -2,9 +2,11 @@
 
 export(make.COSERO.input)
 export(read.spartacus)
+export(readASC)
 export(readINCABIL)
 export(readZAMGGRIB)
 import(TigR)
 import(raster)
 import(rgdal)
+import(stringr)
 import(xts)
