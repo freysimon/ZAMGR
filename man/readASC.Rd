@@ -4,15 +4,17 @@
 \alias{readASC}
 \title{read an ascii-raster-file}
 \usage{
-readASC(x, CoS = NULL)
+readASC(x, CoS = NULL, use.raster = TRUE)
 }
 \arguments{
 \item{x}{character string pointing to a asc file}
 
+\item{use.raster}{logical. Should the file be returned as raster or as matrix?}
+
 \item{Cos}{(optional) character string in the format provided by \code{\link{proj4string}}}
 }
 \value{
-a raster object
+if use.raster == TRUE a raster object is returned, else a matrix
 }
 \description{
 reads an asc raster file and returns the resulting raster

@@ -3,7 +3,7 @@ Type: Package
 Title: Collection of functions for reading ZAMG raster products
 Imports: raster, TigR, xts, rgdal, stringr
 Depends: raster, TigR, xts, rgdal, stringr
-Version: 0.1.7.5
+Version: 0.1.7.6
 Author: Simon Frey
 Maintainer: Simon Frey <simon.frey@verbund.com>
 Description: 
