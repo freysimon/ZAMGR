@@ -1,9 +1,9 @@
 Package: ZAMGR
 Type: Package
 Title: Collection of functions for reading ZAMG raster products
-Imports: raster, TigR, xts, rgdal, stringr
-Depends: raster, TigR, xts, rgdal, stringr
-Version: 0.1.7.6
+Imports: raster, TigR, xts, rgdal, stringr, sp
+Depends: raster, TigR, xts, rgdal, stringr, sp
+Version: 0.1.7.7
 Author: Simon Frey
 Maintainer: Simon Frey <simon.frey@verbund.com>
 Description: 

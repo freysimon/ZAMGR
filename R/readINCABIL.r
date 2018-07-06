@@ -3,7 +3,9 @@
 #' @description Read an INCA file in the BIL format from a .tar.gz archive.
 #' @details Both uncompressed and compressed (.tar.gz) files can be processed. If uncompressed, only the filename without extention must be provided.
 #'
-#'    If times is "date", a POSIXct date object must be provided to selsect the date within the tim file.
+#'    Times == "date" is deprecated and not longer in use. For the sake of compability it is still accepted but the function
+#'    uses times == "first" instead. The user should select the date of interest in a post-processing step.
+#'
 #'    If times is "all", all timestamps within the file are read and a stack of rasters is retured.
 #'
 #'    If remove = TRUE (the standard), the (uncompressed) files are deleted after they are processed. Does not affect compressed files!
@@ -20,6 +22,7 @@
 #' @export
 #' @import TigR
 #' @import raster
+#' @import sp
 #' @examples
 #'    # file to load
 #'    file <- paste(path.package("ZAMGR"),"/extdata/INCA_TT.tar.gz",sep="")
@@ -63,6 +66,7 @@ readINCABIL <- function(filename,times="first",date=NULL,remove=TRUE,CoSys = NUL
   #####################################################################
 
   library(TigR)
+  library(raster)
 
 
   # Überprüfen, ob für times ein sinnvolles Schlagwort angegeben wurde
@@ -70,11 +74,8 @@ readINCABIL <- function(filename,times="first",date=NULL,remove=TRUE,CoSys = NUL
     stop("times muss angegeben werden. Akzepiert werden first, last, all und date")
   }
   if(times == "date"){
-    if(is.null(date)){
-      stop("Wenn times = date muss date angegeben werden")
-    } else if(!"POSIXct" %in% class(date)){
-      stop("date muss als POSIXct angegeben werden")
-    }
+    times <- "first"
+    warning("times = date is deprecated and should not longer be used. Using times = first now.")
   }
 
   if(substrRight(filename,7) == ".tar.gz"){
@@ -164,16 +165,16 @@ readINCABIL <- function(filename,times="first",date=NULL,remove=TRUE,CoSys = NUL
       startBlocks <- 1
       endBlocks <- nBlocks
     }
-    if(times == "date"){
-      if(any(timesteps == date, na.rm = TRUE)){
-        startBlocks <- min(which(timesteps == date))
-        endBlocks <- max(which(timesteps == date))
-      } else {
-        datenotfound = TRUE
-        startBlocks <- 1
-        endBlocks <- 1
-      }
-    }
+    # if(times == "date"){
+    #   if(any(timesteps == date, na.rm = TRUE)){
+    #     startBlocks <- min(which(timesteps == date))
+    #     endBlocks <- max(which(timesteps == date))
+    #   } else {
+    #     datenotfound = TRUE
+    #     startBlocks <- 1
+    #     endBlocks <- 1
+    #   }
+    # }
   } else {
     datenotfound = TRUE
   }
@@ -225,7 +226,18 @@ readINCABIL <- function(filename,times="first",date=NULL,remove=TRUE,CoSys = NUL
     file.remove(paste(filename, ".bil", sep=""))
     file.remove(paste(filename, ".tim", sep=""))
   }
-  names(OUTRASTER) <- format(timesteps[1],format="%Y-%m-%d %H:%M")
+
+  # Datum als Rasternamen schreiben
+  if(times == "first"){
+    names(OUTRASTER) <- format(timesteps[1],format="%Y-%m-%d %H:%M")
+  } else if(times == "last"){
+    names(OUTRASTER) <- format(timesteps[length(timesteps)],format="%Y-%m-%d %H:%M")
+  } else if(times == "all"){
+    names(OUTRASTER) <- format(timesteps,format="%Y-%m-%d %H:%M")
+  } # else {
+  #   names(OUTRASTER) <- format(date,format="%Y-%m-%d %H:%M")
+  # }
+
 
   # Koordinatensystem zuweisen, falls angegeben
   if(!is.null(CoSys)){

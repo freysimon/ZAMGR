@@ -29,7 +29,9 @@ Read an INCA file in the BIL format from a .tar.gz archive.
 \details{
 Both uncompressed and compressed (.tar.gz) files can be processed. If uncompressed, only the filename without extention must be provided.
 
-   If times is "date", a POSIXct date object must be provided to selsect the date within the tim file.
+   Times == "date" is deprecated and not longer in use. For the sake of compability it is still accepted but the function
+   uses times == "first" instead. The user should select the date of interest in a post-processing step.
+
    If times is "all", all timestamps within the file are read and a stack of rasters is retured.
 
    If remove = TRUE (the standard), the (uncompressed) files are deleted after they are processed. Does not affect compressed files!
