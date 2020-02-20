@@ -16,6 +16,9 @@ read.spartacus(x, crs = "default", show.progress = TRUE)
 \value{
 a raster brick
 }
+\description{
+Read information from ZAMG's spatacus dataset
+}
 \author{
 Simon Frey
 }

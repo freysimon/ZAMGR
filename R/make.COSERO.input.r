@@ -5,11 +5,12 @@
 #' @param output name of the outputfile or NULL
 #' @param otf logical. write on-the-fly (don't hold the whole matrix in memory)
 #' @param sortbynz logical. Should the output be sorted according to the nz information?
+#' @param fillmissing logical. Should missing time steps be filled in the output? See details.
 #' @param ... parameters passed to readINCABIL
-#' @return if output == NULL the IZ-matrix is returned. Else the IZ-File is written and nothing is returned to R.
+#' @return if output == NULL the IZ-matrix is returned. Else the IZ-File is written and the IZ-matrix is returned.
 #' @author Simon Frey
 #' @export
-#' @seealso \link{readINCABIL}
+#' @seealso \link{readINCABIL}, \link{fill.missing}
 #' @import rgdal
 #' @import raster
 #' @import TigR
@@ -19,7 +20,11 @@
 #'     The shapefile must be projected in the same coordinate systm as the nzraster as well as the INCA files.
 #'     Normally this is "+proj=lcc +lat_1=46 +lat_2=49 +lat_0=47.5 +lon_0=13.33333333333333 +x_0=400000 +y_0=400000 +ellps=bessel +units=m +no_defs"
 #'
-make.COSERO.input <- function(f, shape, nzraster, output = NULL, otf = FALSE, sortbynz = TRUE, ...){
+#'     \code{fillmissing}: If fillmissing == TRUE the output will be checked on missing timesteps and - if any - will be filled using \code{\link{fill.missing}}.
+#'     Note that if otf == TRUE, the filled matrix will be written to a copy of the otf-output
+#'
+make.COSERO.input <- function(f, shape, nzraster, output = NULL, otf = FALSE,
+                              sortbynz = TRUE, fillmissing = TRUE, ...){
   library(rgdal)
   library(raster)
   library(TigR)
@@ -56,7 +61,7 @@ make.COSERO.input <- function(f, shape, nzraster, output = NULL, otf = FALSE, so
   }
 
 
-  wp <- winProgressBar("Processing INCA Files", min = 0, label = "starting...", max = length(f))
+  wp <- winProgressBar("Processing INCA Files", min = 0, label = "starting...", max = length(f), width = 500L)
 
   # process f
   for(k in 1:length(f)){
@@ -82,7 +87,7 @@ make.COSERO.input <- function(f, shape, nzraster, output = NULL, otf = FALSE, so
 
   if(sortbynz){
 
-    wp <- winProgressBar("Sorting the file", min = 0, max = length(nzext), label = "")
+    wp2 <- winProgressBar("Sorting the file", min = 0, max = length(nzext), label = "")
 
     if(otf){
       IZMAT <- read.table(file = output, header = FALSE, skip = 1, sep = "\t",
@@ -93,7 +98,7 @@ make.COSERO.input <- function(f, shape, nzraster, output = NULL, otf = FALSE, so
     nz <- c(min(nzext):max(nzext))
     IZSORT <- IZMAT[,2:ncol(IZMAT)]
     for(k in 1:ncol(IZSORT)){
-      setWinProgressBar(wp, label = paste(round(k/ncol(IZSORT),2), "%", sep = " "), value = k)
+      setWinProgressBar(wp2, label = paste(round(k/ncol(IZSORT),2), "%", sep = " "), value = k)
       w <- which(colnames(IZMAT) == nz[k])
       IZSORT[,k] <- IZMAT[,w]
     }
@@ -106,13 +111,23 @@ make.COSERO.input <- function(f, shape, nzraster, output = NULL, otf = FALSE, so
       write.table(IZMAT, file = output, col.names=TRUE, row.names=FALSE, sep="\t", quote = FALSE)
     }
 
-    close(Wp)
+    close(wp2)
 
   }
 
-  if(is.null(output)){
-    return(IZMAT)
-  } else if(!otf){
-    write.table(IZMAT, file = output, col.names=TRUE, row.names=FALSE, sep="\t", quote = FALSE)
+  if(fillmissing){
+    IZMAT <- fill.missing(IZMAT)
   }
+
+  if(!is.null(output)){
+    if(!otf){
+      write.table(IZMAT, file = output, col.names=TRUE, row.names=FALSE, sep="\t", quote = FALSE)
+    }
+  }
+  if(otf){
+    write.table(IZMAT, file = paste(dirname(output),"/Filled_Copy_of_",basename(output),sep=""), col.names=TRUE, row.names=FALSE, sep="\t", quote = FALSE)
+  }
+
+  return(IZMAT)
+
 }

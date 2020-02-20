@@ -4,8 +4,16 @@
 \alias{make.COSERO.input}
 \title{Create a T_IZ or P_IZ file from a set of INCA-Files}
 \usage{
-make.COSERO.input(f, shape, nzraster, output = NULL, otf = FALSE,
-  sortbynz = TRUE, ...)
+make.COSERO.input(
+  f,
+  shape,
+  nzraster,
+  output = NULL,
+  otf = FALSE,
+  sortbynz = TRUE,
+  fillmissing = TRUE,
+  ...
+)
 }
 \arguments{
 \item{f}{A character vector of INCA files}
@@ -20,10 +28,12 @@ make.COSERO.input(f, shape, nzraster, output = NULL, otf = FALSE,
 
 \item{sortbynz}{logical. Should the output be sorted according to the nz information?}
 
+\item{fillmissing}{logical. Should missing time steps be filled in the output? See details.}
+
 \item{...}{parameters passed to readINCABIL}
 }
 \value{
-if output == NULL the IZ-matrix is returned. Else the IZ-File is written and nothing is returned to R.
+if output == NULL the IZ-matrix is returned. Else the IZ-File is written and the IZ-matrix is returned.
 }
 \description{
 Create a T_IZ or P_IZ file from a set of INCA-Files
@@ -33,9 +43,12 @@ Reads a set of INCA files (Precipitation or Temperature) and calculates a matrix
 
     The shapefile must be projected in the same coordinate systm as the nzraster as well as the INCA files.
     Normally this is "+proj=lcc +lat_1=46 +lat_2=49 +lat_0=47.5 +lon_0=13.33333333333333 +x_0=400000 +y_0=400000 +ellps=bessel +units=m +no_defs"
+
+    \code{fillmissing}: If fillmissing == TRUE the output will be checked on missing timesteps and - if any - will be filled using \code{\link{fill.missing}}.
+    Note that if otf == TRUE, the filled matrix will be written to a copy of the otf-output
 }
 \seealso{
-\link{readINCABIL}
+\link{readINCABIL}, \link{fill.missing}
 }
 \author{
 Simon Frey

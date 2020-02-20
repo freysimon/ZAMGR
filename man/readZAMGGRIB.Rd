@@ -4,8 +4,15 @@
 \alias{readZAMGGRIB}
 \title{Read a GRIB-1 file using wgrib}
 \usage{
-readZAMGGRIB(gribfile, ex = NULL, crs = NULL, wgrib = NULL,
-  recnr = NULL, variable = NULL, remove = FALSE)
+readZAMGGRIB(
+  gribfile,
+  ex = NULL,
+  crs = NULL,
+  wgrib = NULL,
+  recnr = NULL,
+  variable = NULL,
+  remove = FALSE
+)
 }
 \arguments{
 \item{gribfile}{Absolute path to a gribfile}
