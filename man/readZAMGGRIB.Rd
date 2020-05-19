@@ -17,9 +17,9 @@ readZAMGGRIB(
 \arguments{
 \item{gribfile}{Absolute path to a gribfile}
 
-\item{ex}{Either an \code{\link{extent}} object, NULL, 'alaro', or 'arome'. As of now, 'arome' is not supported, yet.}
+\item{ex}{Either an \code{\link{extent}} object, NULL, 'alaro', or 'arome'.}
 
-\item{crs}{Either a \code{\link{crs}} string, NULL, 'alaro', or 'arome'. As of now, 'arome' is not supported, yet.}
+\item{crs}{Either a \code{\link{crs}} string, NULL, 'alaro', or 'arome'.}
 
 \item{wgrib}{Absolute path to the executable of wgrib. If NULL, wgrib must be installed properly on the system.}
 
@@ -38,14 +38,16 @@ Read a GRIB-1 file provided by the ZAMG using wgrib and extract a specific raste
 }
 \details{
 If ex and/or crs are supplied, the returned raster will be projected. If ex and/or crs are specified as
-"alaro" or "arome", the respective extent and crs are used. Note, that as of now, only alaro is supported.
+"alaro" or "arome", the respective extent and crs are used.
 
     Either recnr or variable must be specified to extract the information of interest.
     If both are given the latter is ignored.
 
     This function relies on the package TigR, which is available on \href{https://github.com/freysimon/TigR}{Github}
 
-    Note that wgrib must be installed on the machine. It can be downloaded from \url{http://www.cpc.ncep.noaa.gov/products/wesley/wgrib.html}
+    Note that wgrib (64Bit) must be installed on the machine. It can be downloaded from \url{http://www.cpc.ncep.noaa.gov/products/wesley/wgrib.html}
+
+    ZAMG per default flips their rasters by "y", so the output will be fliped back that the raster is proceted correcly.
 }
 \seealso{
 For reading INCA files, see \code{\link{readINCABIL}}
