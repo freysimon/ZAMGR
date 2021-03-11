@@ -13,6 +13,7 @@
 #'
 #'
 
+
 sortbynz <- function(x, writefile=NULL, returnmatrix=TRUE, ...){
 
   if(is.character(x)){
@@ -37,10 +38,11 @@ sortbynz <- function(x, writefile=NULL, returnmatrix=TRUE, ...){
   # sort by NZ
   nz <- c(min(nzext):max(nzext))
   IZSORT <- IZMAT
+  cn <- rep(NA,ncol(IZSORT))
   for(k in 1:ncol(IZSORT)){
     setWinProgressBar(wp2, label = paste("sorting... ", round(k/ncol(IZSORT)*100,2), "%", sep = " "), value = k)
     w <- which(colnames(IZMAT) == nz[k])
-    cn <- nz[k]
+    cn[k] <- nz[k]
     IZSORT[,k] <- IZMAT[,w]
   }
   IZMAT <- IZSORT

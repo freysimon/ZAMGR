@@ -64,6 +64,7 @@ Both uncompressed and compressed (.tar.gz) files can be processed. If uncompress
    \link{readBin}
    \link{proj4string}
    \link{crs}
+   \link{writeINCABIL}
 }
 \author{
 Simon Frey

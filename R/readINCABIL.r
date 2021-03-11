@@ -41,6 +41,7 @@
 #'    \link{readBin}
 #'    \link{proj4string}
 #'    \link{crs}
+#'    \link{writeINCABIL}
 
 readINCABIL <- function(filename,times="first",date=NULL,remove=TRUE,CoSys = NULL, tz = "utc"){
 

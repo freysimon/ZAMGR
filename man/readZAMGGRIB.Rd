@@ -17,9 +17,9 @@ readZAMGGRIB(
 \arguments{
 \item{gribfile}{Absolute path to a gribfile}
 
-\item{ex}{Either an \code{\link{extent}} object, NULL, 'alaro', or 'arome'.}
+\item{ex}{Either an \code{\link{extent}} object, NULL, 'alaro', 'arome', or 'ecmwf'.}
 
-\item{crs}{Either a \code{\link{crs}} string, NULL, 'alaro', or 'arome'.}
+\item{crs}{Either a \code{\link{crs}} string, NULL, 'alaro', 'arome', or 'ecmwf'.}
 
 \item{wgrib}{Absolute path to the executable of wgrib. If NULL, wgrib must be installed properly on the system.}
 
@@ -38,7 +38,7 @@ Read a GRIB-1 file provided by the ZAMG using wgrib and extract a specific raste
 }
 \details{
 If ex and/or crs are supplied, the returned raster will be projected. If ex and/or crs are specified as
-"alaro" or "arome", the respective extent and crs are used.
+"alaro", "arome", or "ecmwf" the respective extent and crs are used.
 
     Either recnr or variable must be specified to extract the information of interest.
     If both are given the latter is ignored.
@@ -47,7 +47,7 @@ If ex and/or crs are supplied, the returned raster will be projected. If ex and/
 
     Note that wgrib (64Bit) must be installed on the machine. It can be downloaded from \url{http://www.cpc.ncep.noaa.gov/products/wesley/wgrib.html}
 
-    ZAMG per default flips their rasters by "y", so the output will be fliped back that the raster is proceted correcly.
+    ZAMG per default flips their rasters by "y", so the output will be flipped back that the raster is projected correctly.
 }
 \seealso{
 For reading INCA files, see \code{\link{readINCABIL}}

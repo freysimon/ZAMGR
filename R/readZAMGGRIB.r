@@ -5,8 +5,8 @@
 #' @import TigR
 #' @export
 #' @param gribfile Absolute path to a gribfile
-#' @param ex Either an \code{\link{extent}} object, NULL, 'alaro', or 'arome'.
-#' @param crs Either a \code{\link{crs}} string, NULL, 'alaro', or 'arome'.
+#' @param ex Either an \code{\link{extent}} object, NULL, 'alaro', 'arome', or 'ecmwf'.
+#' @param crs Either a \code{\link{crs}} string, NULL, 'alaro', 'arome', or 'ecmwf'.
 #' @param wgrib Absolute path to the executable of wgrib. If NULL, wgrib must be installed properly on the system.
 #' @param recnr numeric giving the record number of the respective variable within GRIB file
 #' @param variable character string giving the abbreviated variable within the GRIB file.
@@ -15,7 +15,7 @@
 #' @return A (projected) raster with the extracted information
 #' @seealso For reading INCA files, see \code{\link{readINCABIL}}
 #' @details If ex and/or crs are supplied, the returned raster will be projected. If ex and/or crs are specified as
-#' "alaro" or "arome", the respective extent and crs are used.
+#' "alaro", "arome", or "ecmwf" the respective extent and crs are used.
 #'
 #'     Either recnr or variable must be specified to extract the information of interest.
 #'     If both are given the latter is ignored.
@@ -24,7 +24,7 @@
 #'
 #'     Note that wgrib (64Bit) must be installed on the machine. It can be downloaded from \url{http://www.cpc.ncep.noaa.gov/products/wesley/wgrib.html}
 #'
-#'     ZAMG per default flips their rasters by "y", so the output will be fliped back that the raster is proceted correcly.
+#'     ZAMG per default flips their rasters by "y", so the output will be flipped back that the raster is projected correctly.
 
 readZAMGGRIB <- function(gribfile, ex = NULL, crs = NULL, wgrib = NULL, recnr = NULL, variable = NULL, remove = FALSE){
 
@@ -50,19 +50,25 @@ readZAMGGRIB <- function(gribfile, ex = NULL, crs = NULL, wgrib = NULL, recnr = 
 
   if(!is.null(crs)){
     if(crs %in% c(tolower("alaro"),toupper("alaro"),"Alaro",
-                  tolower("arome"),toupper("arome"),"Arome")){
-      crs <- "+proj=longlat +ellps=WGS84 +towgs84=0,0,0,0,0,0,0 +no_defs"
+                  tolower("arome"),toupper("arome"),"Arome",
+                  tolower("ecmwf"),toupper("ecmwf"),"Ecmwf")){
+      #crs <- "+proj=longlat +ellps=WGS84 +towgs84=0,0,0,0,0,0,0 +no_defs"
+      crs <- "+proj=longlat +ellps=WGS84 +no_defs"
     }
   }
 
   is.alaro <- FALSE
   is.arome <- FALSE
+  is.ecmwf <- FALSE
   if(!is.null(ex)){
     if(ex %in% c(tolower("alaro"),toupper("alaro"),"Alaro")){
       is.alaro = TRUE
     }
     if(ex %in% c(tolower("arome"),toupper("arome"),"Arome")){
       is.arome = TRUE
+    }
+    if(ex %in% c(tolower("ecmwf"),toupper("ecmwf"),"Ecmwf")){
+      is.ecmwf = TRUE
     }
   }
 
@@ -71,6 +77,9 @@ readZAMGGRIB <- function(gribfile, ex = NULL, crs = NULL, wgrib = NULL, recnr = 
   }
   if(is.arome){
     ex <- extent(5.484000, 22.11600, 42.972000, 51.828000)
+  }
+  if(is.ecmwf){
+    ex <- extent(1.9375, 30.5625, 36.9375, 55.1875)
   }
 
 
