@@ -4,7 +4,14 @@
 \alias{writeINCABIL}
 \title{Write a raster using the BIL format}
 \usage{
-writeINCABIL(x, file, delete.stx = TRUE, overwrite = TRUE, hdr = "keep")
+writeINCABIL(
+  x,
+  file,
+  delete.stx = TRUE,
+  overwrite = TRUE,
+  hdr = "keep",
+  bandorder = "BIL"
+)
 }
 \arguments{
 \item{x}{raster object. The raster that will be written.}
@@ -16,6 +23,8 @@ writeINCABIL(x, file, delete.stx = TRUE, overwrite = TRUE, hdr = "keep")
 \item{overwrite}{logical. Should an existing file be overwritten?}
 
 \item{hdr}{character string. Any of "keep", "delete", or "update".}
+
+\item{bandorder}{any of 'BIL', 'BSQ', or 'BIP'}
 }
 \description{
 Write a raster in the BIL format used e.g. by INCA
@@ -29,6 +38,8 @@ Write a raster in the BIL format used e.g. by INCA
      the parameter \code{NBANDS} will be set to 1 and the new added parameter \code{NBLOCKS} will receive the former value of \code{NBANDS}.
 
      \code{hdr == 'delete'} deltes the \code{hdr}-file whereas \code{hdr == 'keep'} keeps it unedited.
+
+     \code{bandorder} sets the bandorder of the binary raster file.
 }
 \seealso{
 \link{readINCABIL}

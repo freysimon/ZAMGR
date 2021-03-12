@@ -4,12 +4,14 @@
 \alias{read.hdr}
 \title{Read an HDR file}
 \usage{
-read.hdr(file, add.nblocks = TRUE)
+read.hdr(file, add.nblocks = TRUE, bandorder = NULL)
 }
 \arguments{
 \item{file}{character string. Filename of the file to be read.}
 
 \item{add.nblocks}{logical. Should the agrument nblocks be added to the output? See details.}
+
+\item{bandorder}{character string or NULL. If NULL no changes in the parameter layout are made, else the string of bandorder is used in the hdr file for the parameter layout.}
 }
 \value{
 a data.frame containing the arguments of the hdr file
