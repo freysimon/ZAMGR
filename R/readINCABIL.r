@@ -31,6 +31,7 @@
 #' @import TigR
 #' @import raster
 #' @import sp
+#' @import stringr
 #' @examples
 #'    # file to load
 #'    file <- paste(path.package("ZAMGR"),"/extdata/INCA_TT.tar.gz",sep="")
@@ -133,14 +134,14 @@ readINCABIL <- function(filename,times="first",date=NULL,remove=FALSE,CoSys = NU
 
   # Lese HDR File um Dimensionen zu berechnen
   hdr <- read.table(hdr,header = FALSE,stringsAsFactors = FALSE)
-  nRows <- as.numeric(hdr[hdr[,1]=="nRows",2])
-  nCols <- as.numeric(hdr[hdr[,1]=="nCols",2])
-  nBlocks <- as.numeric(hdr[hdr[,1]=="nBlocks",2])
-  ULX <- as.numeric(hdr[hdr[,1]=="ULXmap",2])
-  ULY <- as.numeric(hdr[hdr[,1]=="ULYmap",2])
-  xdim <- as.numeric(hdr[hdr[,1]=="Xdim",2])
-  ydim <- as.numeric(hdr[hdr[,1]=="Ydim",2])
-  noData <- as.numeric(hdr[hdr[,1]=="NoData",2])
+  nRows <- as.numeric(hdr[stringr::str_detect(hdr[,1],"(?i)nrows"),2])
+  nCols <- as.numeric(hdr[stringr::str_detect(hdr[,1],"(?i)ncols"),2])
+  nBlocks <- as.numeric(hdr[stringr::str_detect(hdr[,1],"(?i)nblocks"),2])
+  ULX <- as.numeric(hdr[stringr::str_detect(hdr[,1],"(?i)ulxmap"),2])
+  ULY <- as.numeric(hdr[stringr::str_detect(hdr[,1],"(?i)ulymap"),2])
+  xdim <- as.numeric(hdr[stringr::str_detect(hdr[,1],"(?i)xdim"),2])
+  ydim <- as.numeric(hdr[stringr::str_detect(hdr[,1],"(?i)ydim"),2])
+  noData <- as.numeric(hdr[stringr::str_detect(hdr[,1],"(?i)nodata"),2])
 
   if(is.null(ex)){
     ext <- extent(ULX-xdim/2,

@@ -11,6 +11,7 @@
 #' @param overwrite logical. Should an existing file be overwritten?
 #' @param hdr character string. Any of "keep", "delete", or "update".
 #' @param bandorder any of 'BIL', 'BSQ', or 'BIP'
+#' @param noValue numeric or NULL. What value is assigned to nodata?
 #' @seealso \link{readINCABIL}
 #'    \link{readZAMGGRIB}
 #'    \link{read.hdr}
@@ -27,7 +28,7 @@
 
 
 
-writeINCABIL <- function(x, file, delete.stx=TRUE, overwrite = TRUE, hdr = "keep", bandorder='BIL'){
+writeINCABIL <- function(x, file, delete.stx=TRUE, overwrite = TRUE, hdr = "keep", bandorder='BIL', noValue = NULL){
 
   if(!hdr %in% c("keep","delete","update")){
     stop("ERROR: hdr must be one of 'keep', 'delete', or 'update'.")
@@ -51,7 +52,7 @@ writeINCABIL <- function(x, file, delete.stx=TRUE, overwrite = TRUE, hdr = "keep
   # temporary change the fileextension to bandorder value
   file <- gsub("bil",bandorder,file)
 
-  writeRaster(x, filename = file, overwrite = overwrite, bandorder = bandorder)
+  writeRaster(x, filename = file, overwrite = overwrite, bandorder = bandorder, datatype='INT2S')
 
   # change file extension back to "bil"
   file.rename(from=file, to = gsub(bandorder,"bil",file))
@@ -66,7 +67,7 @@ writeINCABIL <- function(x, file, delete.stx=TRUE, overwrite = TRUE, hdr = "keep
     file.remove(gsub(".bil",".hdr",file,fixed=TRUE))
   }
   if(hdr == "update"){
-    hdr.new  <- read.hdr(file = gsub(".bil",".hdr", file, fixed = TRUE), add.nblocks = TRUE, bandorder = "BIL")
+    hdr.new  <- read.hdr(file = gsub(".bil",".hdr", file, fixed = TRUE), add.nblocks = TRUE, bandorder = "BIL", noValue = noValue)
     write.table(x=hdr.new, file = gsub(".bil",".hdr", file, fixed = TRUE),
                 quote = FALSE, col.names = FALSE, row.names = FALSE, sep = " ")
   }

@@ -10,7 +10,8 @@ writeINCABIL(
   delete.stx = TRUE,
   overwrite = TRUE,
   hdr = "keep",
-  bandorder = "BIL"
+  bandorder = "BIL",
+  noValue = NULL
 )
 }
 \arguments{
@@ -25,6 +26,8 @@ writeINCABIL(
 \item{hdr}{character string. Any of "keep", "delete", or "update".}
 
 \item{bandorder}{any of 'BIL', 'BSQ', or 'BIP'}
+
+\item{noValue}{numeric or NULL. What value is assigned to nodata?}
 }
 \description{
 Write a raster in the BIL format used e.g. by INCA

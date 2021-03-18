@@ -9,10 +9,11 @@
 #' @param write.raster logical. Should the extended raster be written to disk (TRUE) or returned (FALSE)?
 #' @param filename character string. Filename used to write the extended raster. Only used if write.raster==TRUE.
 #' @param mp numeric. multiplicator to multiply the (existing) raster with.
+#' @param noValue numeric. Sets the nodata value for the new raster.
 #' @seealso \link{readINCABIL}
 #'    \link{writeINCABIL}
 
-extend.raster <- function(x, new.extent, write.raster = TRUE, filename=NULL, mp = 1){
+extend.raster <- function(x, new.extent, write.raster = TRUE, filename=NULL, mp = 1, noValue = NULL){
 
   library(raster)
 
@@ -39,6 +40,14 @@ extend.raster <- function(x, new.extent, write.raster = TRUE, filename=NULL, mp 
   raster::res(x.new) <- x.resolution
 
   new.raster <- raster::merge(x.new,x)
+
+  if(!is.null(noValue)){
+    new.raster[is.na(new.raster)] <- noValue
+    NAvalue(new.raster) <- noValue
+  }
+
+
+
 
   if(write.raster){
     writeINCABIL(x=new.raster,file=filename,hdr="update")
