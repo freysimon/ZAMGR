@@ -10,6 +10,7 @@ readINCABIL(
   date = NULL,
   remove = FALSE,
   CoSys = NULL,
+  ex = NULL,
   tz = "utc",
   form = "stack"
 )
@@ -24,6 +25,8 @@ readINCABIL(
 \item{remove}{Logical. Remove the processed files?}
 
 \item{CoSys}{A character string giving the coordinate system of the raster or NULL.}
+
+\item{ex}{Either an extent, a numerical vector that can be coerced to an extent object or NULL.}
 
 \item{tz}{A character string giving the time zone}
 
@@ -48,6 +51,9 @@ Both uncompressed and compressed (.tar.gz) files can be processed. If uncompress
    If CoSys is provided (e.g. from a \link{proj4string} command), the retured raster is projected using this reference system. Otherwise no coordinate system is used.
 
    form == list returns a named list with the read rasters. form == stack returns a raster stack.
+
+   If ex == NULL (the default) the extent of the raster will be calculated on basis of ULX and ULY (in the hdr file). As an alternative, the extent can be supplied using the parameter \code{ex}
+   which must be either an \code{extent} object or a numerical vector (length = 4) which can be coerced to an \code{extent}.
 }
 \examples{
    # file to load
@@ -70,6 +76,7 @@ Both uncompressed and compressed (.tar.gz) files can be processed. If uncompress
    \link{proj4string}
    \link{crs}
    \link{writeINCABIL}
+   \link{extent}
 }
 \author{
 Simon Frey

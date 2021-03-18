@@ -13,6 +13,10 @@
 #'    If CoSys is provided (e.g. from a \link{proj4string} command), the retured raster is projected using this reference system. Otherwise no coordinate system is used.
 #'
 #'    form == list returns a named list with the read rasters. form == stack returns a raster stack.
+#'
+#'    If ex == NULL (the default) the extent of the raster will be calculated on basis of ULX and ULY (in the hdr file). As an alternative, the extent can be supplied using the parameter \code{ex}
+#'    which must be either an \code{extent} object or a numerical vector (length = 4) which can be coerced to an \code{extent}.
+#'
 #' @author Simon Frey
 #' @param filename A character string to the file to be read in
 #' @param times  A character string giving the elemnt of the BIL file to be read in. One of 'first', 'last', 'all', 'date'. See details.
@@ -21,6 +25,7 @@
 #' @param CoSys A character string giving the coordinate system of the raster or NULL.
 #' @param tz A character string giving the time zone
 #' @param form A character string. May be either 'list' or 'stack'
+#' @param ex Either an extent, a numerical vector that can be coerced to an extent object or NULL.
 #' @return A named (date and time) list with rasters if \code{form == 'list'}, or, if \code{form == 'stack'} a raster stack
 #' @export
 #' @import TigR
@@ -45,8 +50,9 @@
 #'    \link{proj4string}
 #'    \link{crs}
 #'    \link{writeINCABIL}
+#'    \link{extent}
 
-readINCABIL <- function(filename,times="first",date=NULL,remove=FALSE,CoSys = NULL, tz = "utc", form = "stack"){
+readINCABIL <- function(filename,times="first",date=NULL,remove=FALSE,CoSys = NULL, ex = NULL, tz = "utc", form = "stack"){
 
   #####################################################################
   #                                                                   #
@@ -136,10 +142,17 @@ readINCABIL <- function(filename,times="first",date=NULL,remove=FALSE,CoSys = NU
   ydim <- as.numeric(hdr[hdr[,1]=="Ydim",2])
   noData <- as.numeric(hdr[hdr[,1]=="NoData",2])
 
-  ext <- extent(ULX-xdim/2,
-                ULX+nCols*1000-xdim/2,
-                ULY-nRows*1000+ydim/2,
+  if(is.null(ex)){
+    ext <- extent(ULX-xdim/2,
+                ULX+nCols*xdim-xdim/2,
+                ULY-nRows*ydim+ydim/2,
                 ULY+ydim/2)
+  } else if(is.numeric(ex)){
+    ext <- extent(ex)
+  } else {
+    stop("ERROR: ex must be an extent object or a numeric vector that can be coerced to one.")
+  }
+
 
   datenotfound = FALSE
 

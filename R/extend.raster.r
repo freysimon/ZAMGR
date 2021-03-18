@@ -4,13 +4,15 @@
 #' @export
 #' @import raster
 #' @return a raster object if \code{write.raster == FALSE}
-#' @param x a raster object
+#' @param x a raster object. May be a raster, a RasterBrick or a RasterStack.
 #' @param new.extent either an extent or a numerical vector that can be coerced to an extent.
 #' @param write.raster logical. Should the extended raster be written to disk (TRUE) or returned (FALSE)?
+#' @param filename character string. Filename used to write the extended raster. Only used if write.raster==TRUE.
+#' @param mp numeric. multiplicator to multiply the (existing) raster with.
 #' @seealso \link{readINCABIL}
 #'    \link{writeINCABIL}
 
-extend.raster <- function(x, new.extent, write.raster = TRUE){
+extend.raster <- function(x, new.extent, write.raster = TRUE, filename=NULL, mp = 1){
 
   library(raster)
 
@@ -26,6 +28,8 @@ extend.raster <- function(x, new.extent, write.raster = TRUE){
     stop("ERROR: new.extent must be an extent or a numerical vector that can be coerced to an extent")
   }
 
+  x <- x*mp
+
   x.extent <- raster::extent(x)
   x.resolution <- raster::res(x)
 
@@ -37,7 +41,7 @@ extend.raster <- function(x, new.extent, write.raster = TRUE){
   new.raster <- raster::merge(x.new,x)
 
   if(write.raster){
-    writeINCABIL(x=new.raster,file="C:/TEMP/hyena/test.bil",hdr="update")
+    writeINCABIL(x=new.raster,file=filename,hdr="update")
   } else {
     return(new.raster)
   }

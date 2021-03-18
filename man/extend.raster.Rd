@@ -4,14 +4,18 @@
 \alias{extend.raster}
 \title{Extend a BIL raster file by NOVALUE data}
 \usage{
-extend.raster(x, new.extent, write.raster = TRUE)
+extend.raster(x, new.extent, write.raster = TRUE, filename = NULL, mp = 1)
 }
 \arguments{
-\item{x}{a raster object}
+\item{x}{a raster object. May be a raster, a RasterBrick or a RasterStack.}
 
 \item{new.extent}{either an extent or a numerical vector that can be coerced to an extent.}
 
 \item{write.raster}{logical. Should the extended raster be written to disk (TRUE) or returned (FALSE)?}
+
+\item{filename}{character string. Filename used to write the extended raster. Only used if write.raster==TRUE.}
+
+\item{mp}{numeric. multiplicator to multiply the (existing) raster with.}
 }
 \value{
 a raster object if \code{write.raster == FALSE}
