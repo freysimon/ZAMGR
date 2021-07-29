@@ -17,7 +17,7 @@
 #' @import xts
 #' @details Reads a set of INCA files (Precipitation or Temperature) and calculates a matrix that can be read by COSERO.
 #'
-#'     The shapefile must be projected in the same coordinate systm as the nzraster as well as the INCA files.
+#'     The shapefile must be projected in the same coordinate system as the nzraster as well as the INCA files.
 #'     Normally this is "+proj=lcc +lat_1=46 +lat_2=49 +lat_0=47.5 +lon_0=13.33333333333333 +x_0=400000 +y_0=400000 +ellps=bessel +units=m +no_defs"
 #'
 #'     \code{fillmissing}: If fillmissing == TRUE the output will be checked on missing timesteps and - if any - will be filled using \code{\link{fill.missing}}.
@@ -33,11 +33,8 @@ make.COSERO.input <- function(f, shape, nzraster, output = NULL, otf = FALSE,
 
 
   # read shapefile
-  shp <- gsub(".shp","",last(unlist(strsplit(shape, "/", fixed = TRUE))))
-  dsn <- unlist(strsplit(shape, "/", fixed = TRUE))
-  dsn <- paste(dsn[1:(length(dsn)-1)], collapse = "/")
-  shape <- readOGR(dsn = dsn, layer = shp)
-  p4j <- proj4string(shape)
+  shape <- TigR::readogr(shape)
+  p4j <- crs(shape)
 
   # read nzraster
   nzras <- raster(nzraster)
@@ -57,6 +54,9 @@ make.COSERO.input <- function(f, shape, nzraster, output = NULL, otf = FALSE,
       wt <- c("Date", nzext)
       write.table(t(wt), file = output, col.names = FALSE, row.names = FALSE,
                   sep="\t", quote = FALSE)
+
+      IZMAT <- as.data.frame(matrix(ncol = length(nzext)+1, nrow = length(f), data = NA))
+      colnames(IZMAT) <- c("Date", nzext)
     }
   }
 
@@ -70,17 +70,20 @@ make.COSERO.input <- function(f, shape, nzraster, output = NULL, otf = FALSE,
     if(is.null(file)){
       next
     }
-    date <- last(unlist(strsplit(names(file), ".", fixed = TRUE)))
+    date <- as.character(
+      format(
+        as.POSIXct(names(file), format = "X%Y.%m.%d.%H.%M", tz = "UTC"),
+        format = "%Y %m %d %H %M")
+    )
+
+    #date <- last(unlist(strsplit(names(file), ".", fixed = TRUE)))
     ext <- extract(file[[1]], shape)
+    ext <- c(date, ext)
+    IZMAT[k,] <- ext
     if(otf){
-      ext <- c(date, ext)
       write.table(t(ext), file = output, append = TRUE, quote = FALSE,
                   col.names = FALSE, row.names = FALSE, sep = "\t")
-    } else {
-      IZMAT[k,1] <- date
-      IZMAT[k,2:ncol(IZMAT)] <- ext
     }
-
   }
 
   close(wp)
@@ -90,7 +93,14 @@ make.COSERO.input <- function(f, shape, nzraster, output = NULL, otf = FALSE,
   }
 
   if(fillmissing){
-    IZMAT <- fill.missing(IZMAT)
+    CN <- colnames(IZMAT)
+    IZMAT <- fill.missing(xts(IZMAT[,2:ncol(IZMAT)],
+                              order.by = as.POSIXct(IZMAT[,1], format = "%Y %m %d %H %M", tz = "UTC")))
+    tmp <- as.data.frame(IZMAT)
+    IZMAT <- cbind(as.character(format(index(IZMAT), format = "%Y %m %d %H %M")), tmp)
+    colnames(IZMAT) <- CN
+    rm(tmp)
+    rm(CN)
   }
 
   if(!is.null(output)){
