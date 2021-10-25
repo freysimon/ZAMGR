@@ -10,7 +10,7 @@
 #'
 #'    If remove = TRUE (the standard), the (uncompressed) files are deleted after they are processed. Does not affect compressed files!
 #'
-#'    If CoSys is provided (e.g. from a \link{proj4string} command), the retured raster is projected using this reference system. Otherwise no coordinate system is used.
+#'    If CoSys is provided (e.g. from a \link{proj4string} command), the returned raster is projected using this reference system. Otherwise no coordinate system is used.
 #'
 #'    form == list returns a named list with the read rasters. form == stack returns a raster stack.
 #'
@@ -19,7 +19,7 @@
 #'
 #' @author Simon Frey
 #' @param filename A character string to the file to be read in
-#' @param times  A character string giving the elemnt of the BIL file to be read in. One of 'first', 'last', 'all', 'date'. See details.
+#' @param times  A character string giving the element of the BIL file to be read in. One of 'first', 'last', 'all', 'date'. See details.
 #' @param date A POSIXct date or NULL. Only evaluated if times == date
 #' @param remove Logical. Remove the processed files?
 #' @param CoSys A character string giving the coordinate system of the raster or NULL.
@@ -174,14 +174,17 @@ readINCABIL <- function(filename,times="first",date=NULL,remove=FALSE,CoSys = NU
     if(times == "first"){
       startBlocks <- 1
       endBlocks <- 1
+      k_init = 1
     }
     if(times == "last"){
       startBlocks <- nBlocks
       endBlocks <- nBlocks
+      k_init = nRows*nCols*(nBlocks-1)
     }
     if(times == "all"){
       startBlocks <- 1
       endBlocks <- nBlocks
+      k_init = 1
     }
     # if(times == "date"){
     #   if(any(timesteps == date, na.rm = TRUE)){
@@ -206,7 +209,7 @@ readINCABIL <- function(filename,times="first",date=NULL,remove=FALSE,CoSys = NU
 
   if(!datenotfound){
      # Daten auf Raster prägen
-    k = 1
+    k = k_init
     l = 1
     for(b in startBlocks:endBlocks){
       for(i in 1:nRows){
@@ -219,7 +222,7 @@ readINCABIL <- function(filename,times="first",date=NULL,remove=FALSE,CoSys = NU
     }
   } else {
     # Daten auf Raster prägen
-    k = 1
+    k = k_init
     l = 1
     for(b in startBlocks:endBlocks){
       for(i in 1:nRows){

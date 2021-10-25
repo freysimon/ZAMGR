@@ -89,7 +89,7 @@ make.COSERO.input <- function(f, shape, nzraster, output = NULL, otf = FALSE,
   close(wp)
 
   if(sortbynz){
-    IZMAT <- sortbynz(x=IZMAT, writefile=FALSE, returnmatrix=TRUE)
+    IZMAT <- sortbynz(x=IZMAT, writefile=FALSE, returnmatrix=TRUE, tz = "utc")
   }
 
   if(fillmissing){

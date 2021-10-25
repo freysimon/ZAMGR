@@ -18,7 +18,7 @@ readINCABIL(
 \arguments{
 \item{filename}{A character string to the file to be read in}
 
-\item{times}{A character string giving the elemnt of the BIL file to be read in. One of 'first', 'last', 'all', 'date'. See details.}
+\item{times}{A character string giving the element of the BIL file to be read in. One of 'first', 'last', 'all', 'date'. See details.}
 
 \item{date}{A POSIXct date or NULL. Only evaluated if times == date}
 
@@ -48,7 +48,7 @@ Both uncompressed and compressed (.tar.gz) files can be processed. If uncompress
 
    If remove = TRUE (the standard), the (uncompressed) files are deleted after they are processed. Does not affect compressed files!
 
-   If CoSys is provided (e.g. from a \link{proj4string} command), the retured raster is projected using this reference system. Otherwise no coordinate system is used.
+   If CoSys is provided (e.g. from a \link{proj4string} command), the returned raster is projected using this reference system. Otherwise no coordinate system is used.
 
    form == list returns a named list with the read rasters. form == stack returns a raster stack.
 

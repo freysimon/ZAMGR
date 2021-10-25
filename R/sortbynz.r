@@ -6,21 +6,24 @@
 #' @param x xts object or character string to a file that will be read using \code{\link{read.xts}}.
 #' @param writefile NULL or character string pointing to a file, that will be written.
 #' @param returnmatrix logical. Should the result be returned to R?
+#' @param tz character. Time zone.
+#' @param dls.remove logical. Should daylight savings be removed from the time series using \link{rm.dls}
 #' @param ... additional parameters passed on to \code{\link{read.xts}}
 #' @return An xts object, if returnmatrix == TRUE
 #' @export
 #' @import TigR
+#' @seealso \link{read.xts}, \link{rm.dls}
 #'
 #'
 
 
-sortbynz <- function(x, writefile=NULL, returnmatrix=TRUE, ...){
+sortbynz <- function(x, writefile=NULL, returnmatrix=TRUE, tz = "utc", dls.remove = TRUE, ...){
 
   if(is.character(x)){
     nzext <- read.table(x,header=F,nrow=1)
     wp2 <- winProgressBar("Sorting the file", min = 0, max = length(nzext), label = paste("Reading input from file: ",x,sep=""),width=900L)
 
-    IZMAT <- TigR::read.xts(x, ...)
+    IZMAT <- TigR::read.xts(x, tz = tz, ...)
     nzext <- colnames(IZMAT)
 
 
@@ -31,6 +34,10 @@ sortbynz <- function(x, writefile=NULL, returnmatrix=TRUE, ...){
     IZMAT <- x
     nzext <- colnames(x)
     wp2 <- winProgressBar("Sorting the file", min = 0, max = length(nzext), label = "",width=900L)
+  }
+
+  if(dls.remove){
+    IZMAT <- rm.dls(IZMAT)
   }
 
   nzext <- as.numeric(nzext)
