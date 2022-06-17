@@ -72,7 +72,7 @@ readINCABIL <- function(filename,times="first",date=NULL,remove=FALSE,CoSys = NU
   # Gibt eine Liste mit Rastern zurück                                #
   #                                                                   #
   # Autor: Simon Frey                                                 #
-  # Version 0.4 (September 2016 - Jänner 2017)                        #
+  # Version 0.1.9.0 (September 2016 - Juni 2022                       #
   #                                                                   #
   #####################################################################
 
@@ -179,7 +179,7 @@ readINCABIL <- function(filename,times="first",date=NULL,remove=FALSE,CoSys = NU
     if(times == "last"){
       startBlocks <- nBlocks
       endBlocks <- nBlocks
-      k_init = nRows*nCols*(nBlocks-1)
+      k_init = nRows*nCols*(nBlocks-1) + 1
     }
     if(times == "all"){
       startBlocks <- 1
