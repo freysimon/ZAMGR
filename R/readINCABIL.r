@@ -1,22 +1,7 @@
 
 #' Read a binary INCA file
 #' @description Read an INCA file in the BIL format from a .tar.gz archive.
-#' @details Both uncompressed and compressed (.tar.gz) files can be processed. If uncompressed, only the filename without extension must be provided.
-#'
-#'    Times == "date" is deprecated and not longer in use. For the sake of compatibility it is still accepted but the function
-#'    uses times == "first" instead. The user should select the date of interest in a post-processing step.
-#'
-#'    If times is "all", all timestamps within the file are read and a stack of rasters is returned.
-#'
-#'    If remove = TRUE (the standard), the (uncompressed) files are deleted after they are processed. Does not affect compressed files!
-#'
-#'    If CoSys is provided (e.g. from a \link{proj4string} command), the returned raster is projected using this reference system. Otherwise no coordinate system is used.
-#'
-#'    form == list returns a named list with the read rasters. form == stack returns a raster stack.
-#'
-#'    If ex == NULL (the default) the extent of the raster will be calculated on basis of ULX and ULY (in the hdr file). As an alternative, the extent can be supplied using the parameter \code{ex}
-#'    which must be either an \code{extent} object or a numerical vector (length = 4) which can be coerced to an \code{extent}.
-#'
+#' @details Both uncompressed and compressed (.tar.gz) files can be processed. If uncompressed, only the filename without extension must be provided.#'
 #' @author Simon Frey
 #' @param filename A character string to the file to be read in
 #' @param times  A character string giving the element of the BIL file to be read in. One of 'first', 'last', 'all', 'date'. See details.
@@ -30,7 +15,7 @@
 #' @export
 #' @import TigR
 #' @import raster
-#' @import sp
+#' @import sf
 #' @import stringr
 #' @examples
 #'    # file to load
@@ -263,7 +248,7 @@ readINCABIL <- function(filename,times="first",date=NULL,remove=FALSE,CoSys = NU
   # Koordinatensystem zuweisen, falls angegeben
   if(!is.null(CoSys)){
     for(k in 1:length(OUTRASTER)){
-      crs(OUTRASTER[[k]]) <- CoSys
+      terra::crs(OUTRASTER[[k]]) <- CoSys
     }
   }
 

@@ -3,6 +3,7 @@
 #' @author Simon Frey
 #' @import raster
 #' @import TigR
+#' @import terra
 #' @export
 #' @param gribfile Absolute path to a gribfile
 #' @param ex Either an \code{\link{extent}} object, NULL, 'alaro', 'arome', or 'ecmwf'.
@@ -133,7 +134,7 @@ readZAMGGRIB <- function(gribfile, ex = NULL, crs = NULL, wgrib = NULL, recnr = 
   }
 
   if(!is.null(crs)){
-    crs(ras) <- crs
+    terra::crs(ras) <- crs
   }
 
   if(any(c(is.arome,is.alaro))){

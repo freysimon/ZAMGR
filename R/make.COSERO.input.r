@@ -11,7 +11,7 @@
 #' @author Simon Frey
 #' @export
 #' @seealso \link{readINCABIL}, \link{fill.missing}
-#' @import rgdal
+#' @import terra
 #' @import raster
 #' @import TigR
 #' @import xts
@@ -34,7 +34,7 @@ make.COSERO.input <- function(f, shape, nzraster, output = NULL, otf = FALSE,
 
   # read shapefile
   shape <- TigR::readogr(shape)
-  p4j <- crs(shape)
+  p4j <- terra::crs(shape)
 
   # read nzraster
   nzras <- raster(nzraster)
