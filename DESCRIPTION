@@ -7,7 +7,7 @@ Imports:
     xts,
     stringr,
     terra
-Version: 0.1.9.1
+Version: 0.1.9.2
 Author: Simon Frey
 Maintainer: Simon Frey <simon.frey@verbund.com>
 Description: Read and write raster formats provided by GSA, formerly known as ZAMG. Supported formats are - so far - GRIB2, used by AROME,

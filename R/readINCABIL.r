@@ -78,18 +78,30 @@ readINCABIL <- function(filename,times="first",date=NULL,remove=FALSE,CoSys = NU
     # make sure to purge tempdir first
     file.remove(dir(path = tempdir(), full.names = TRUE, pattern = "bil"))
 
-    result <- tryCatch({
-      expr = untar(filename, exdir = tempdir(), tar = "internal")
-      },
-      warning = function(war) {
-        print("warning was generated")
-        1
-      },
-      error = function(e){
-        print("there was an error")
-        NULL
-      }
-    )
+    # Test if the archive is valide and if so, extract it. If it is not, return NULL
+
+    valide <- TRUE
+
+    tryCatch(untar(filename, exdir = tempdir(), tar = "internal", list = TRUE), error = function(e) {valide <<- FALSE })
+
+    if(!valide){
+      return(NULL)
+    } else {
+      untar(filename, exdir = tempdir(), tar = "internal")
+    }
+
+    # result <- tryCatch({
+    #   expr = untar(filename, exdir = tempdir(), tar = "internal")
+    #   },
+    #   warning = function(war) {
+    #     print("warning was generated")
+    #     1
+    #   },
+    #   error = function(e){
+    #     print("there was an error")
+    #     NULL
+    #   }
+    # )
 
 
     filename <- dir(path = tempdir(), pattern = "bil", full.names = TRUE)
